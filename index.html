@@ -60,6 +60,7 @@
 	<!-- Custom CSS -->
 	<link rel="stylesheet" href="style.css">
 	<link rel="stylesheet" href="google.css">
+	
 
 	<link rel="shortcut icon" href="logo.png" type="image/x-icon">
 
@@ -73,10 +74,59 @@
 			<a class="navbar-brand fw-bold text-dark" href="#">
 				<img src="logo.png" width="110" alt="iTaxy Logo">
 			</a>
-			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-				aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
+			<!-- Mobile controls (flag first, then hamburger) -->
+			<div class="d-lg-none ms-auto d-flex align-items-center gap-2">
+				<div class="dropdown">
+					<button
+						class="btn btn-light rounded-circle d-flex align-items-center justify-content-center"
+						id="languageDropdownMobile"
+						data-bs-toggle="dropdown"
+						aria-expanded="false"
+						style="width: 32px; height: 32px"
+					>
+						<iconify-icon
+							id="selectedLangIconMobile"
+							icon="circle-flags:de"
+							style="font-size: 30px"
+						></iconify-icon>
+					</button>
+					<ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdownMobile">
+						<li>
+							<a class="dropdown-item d-flex lang-select align-items-center lang-option" data-lang="de" data-icon="circle-flags:de" href="#">
+								<iconify-icon icon="circle-flags:de" class="m-2"></iconify-icon>
+								<font dir="auto" style="vertical-align: inherit"><font dir="auto" style="vertical-align: inherit">Deutsch</font></font>
+							</a>
+						</li>
+						<li>
+							<a class="dropdown-item d-flex lang-select align-items-center lang-option" data-lang="fr" data-icon="circle-flags:fr" href="#">
+								<iconify-icon icon="circle-flags:fr" class="m-2"></iconify-icon>
+								<font dir="auto" style="vertical-align: inherit"><font dir="auto" style="vertical-align: inherit">Französisch</font></font>
+							</a>
+						</li>
+						<li>
+							<a class="dropdown-item d-flex lang-select align-items-center lang-option" data-lang="it" data-icon="circle-flags:it" href="#">
+								<iconify-icon icon="circle-flags:it" class="m-2"></iconify-icon>
+								<font dir="auto" style="vertical-align: inherit"><font dir="auto" style="vertical-align: inherit">Italienisch</font></font>
+							</a>
+						</li>
+						<li>
+							<a class="dropdown-item d-flex lang-select align-items-center lang-option" data-lang="en" data-icon="circle-flags:us" href="#">
+								<iconify-icon icon="circle-flags:us" class="m-2"></iconify-icon>
+								<font dir="auto" style="vertical-align: inherit"><font dir="auto" style="vertical-align: inherit">Englisch</font></font>
+							</a>
+						</li>
+						<li>
+							<a class="dropdown-item d-flex lang-select align-items-center lang-option" data-lang="ta" data-icon="circle-flags:in" href="#">
+								<iconify-icon icon="circle-flags:in" class="m-2"></iconify-icon>
+								<font dir="auto" style="vertical-align: inherit"><font dir="auto" style="vertical-align: inherit">Tamil</font></font>
+							</a>
+						</li>
+					</ul>
+				</div>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+			</div>
 			<div class="collapse navbar-collapse" id="navbarNav">
 				<ul class="navbar-nav ms-auto">
 					<li class="nav-item">
@@ -94,7 +144,7 @@
 					<li class="nav-item">
 						<a class="nav-link" href="#contact">Contact</a>
 					</li>
-					<div class="navbar-item">
+					<li class="nav-item d-none d-lg-flex align-items-center">
 						<div class="dropdown ms-3">
 						  <button
 							class="btn btn-light d-flex align-items-center justify-content-center rounded me-3"
@@ -201,7 +251,7 @@
 							</li>
 						  </ul>
 						</div>
-					  </div>
+					  </li>
 				</ul>
 				<button class="btn btn-primary-corporate ms-lg-3 px-4 py-2 rounded-pill d-none d-lg-block">Book a
 					Ride</button>
@@ -613,6 +663,8 @@
     <script src="./assets/iconify.js"></script>
 	<script src="./assets/translate.js"></script>
     <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+	<!-- Hidden container for Google Translate widget -->
+	<div id="google_translate_element" style="display: none;"></div>
 	<script type="text/javascript">
 		function googleTranslateElementInit() {
 		  new google.translate.TranslateElement(
@@ -626,6 +678,30 @@
 		  );
 		}
 	  </script>
+
+	<script>
+		// Reflect selected language flag based on googtrans cookie
+		(function() {
+			function getCookie(name) {
+				var value = "; " + document.cookie;
+				var parts = value.split("; " + name + "=");
+				if (parts.length === 2) return parts.pop().split(";").shift();
+			}
+			function mapLangToIcon(lang) {
+				var map = { de: 'circle-flags:de', fr: 'circle-flags:fr', it: 'circle-flags:it', en: 'circle-flags:us', ta: 'circle-flags:in' };
+				return map[lang] || 'circle-flags:de';
+			}
+			document.addEventListener('DOMContentLoaded', function() {
+				var gt = getCookie('googtrans'); // format like /en/de
+				var selected = (gt && gt.split('/').pop()) || 'de';
+				var icon = mapLangToIcon(selected);
+				var desktopIconEl = document.getElementById('selectedLangIcon');
+				var mobileIconEl = document.getElementById('selectedLangIconMobile');
+				if (desktopIconEl) desktopIconEl.setAttribute('icon', icon);
+				if (mobileIconEl) mobileIconEl.setAttribute('icon', icon);
+			});
+		})();
+	</script>
 
 	<script>
 		// Scroll to top button logic
